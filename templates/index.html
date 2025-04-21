@@ -541,10 +541,10 @@
                 showStatus('Transcribing your audio...', 'info');
                 
                 try {
-                    const response = await fetch('/api/transcribe', {
-                        method: 'POST',
-                        body: formData
-                    });
+                    const result = await sendToServer(formData);
+                    
+                    // Update transcript
+                    document.getElementById('basicTranscript').textContent = result.text || "No transcript received.";
                     
                     const result = await response.json();
                     
@@ -566,7 +566,16 @@
                         showStatus(`Error: ${result.error}`, 'danger');
                     }
                 } catch (error) {
-                    showStatus(`Error: ${error.message}`, 'danger');
+                    console.error('Upload error:', error);
+                    
+                    // User-friendly error messages
+                    if (error.name === 'AbortError') {
+                        showStatus('The request took too long to complete. Please try with a smaller file or check your connection.', 'warning');
+                    } else if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
+                        showStatus('Network error. Please check your internet connection and try again.', 'danger');
+                    } else {
+                        showStatus(`Error: ${error.message}`, 'danger');
+                    }
                 }
             });
             
@@ -663,7 +672,7 @@
                             
                             const audioFile = new File([audioBlob], `recording.${fileExtension}`, { type: mimeType });
                             
-                            // Create form data and add file
+                            // Prepare form data
                             const formData = new FormData();
                             formData.append('file', audioFile);
                             formData.append('language', document.getElementById('basicLanguageSelect').value);
