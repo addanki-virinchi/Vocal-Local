@@ -1,11 +1,11 @@
 """
-API module for handling transcription requests.
+API module for handling transcription and translation requests.
 """
 
 import os
 import io
 import openai
-from ..core.config import API_KEY
+from ..core.config import API_KEY, SUPPORTED_LANGUAGES
 
 def initialize_api():
     """Initialize the OpenAI API with our key."""
@@ -31,4 +31,29 @@ def transcribe_audio(audio_data, model="gpt-4o-mini-transcribe", language="en"):
         
     except Exception as e:
         print(f"Error transcribing with {model}: {e}")
+        return None
+
+def translate_text(text, target_language="en"):
+    """Translate text to target language using OpenAI API."""
+    try:
+        # Get language name for better prompting
+        language_name = next((name for name, code in SUPPORTED_LANGUAGES.items() 
+                            if code == target_language), target_language)
+        
+        print(f"Translating to {language_name}...")
+        
+        # Call OpenAI API for translation
+        response = openai.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content": f"You are a translator. Translate the following text to {language_name}."},
+                {"role": "user", "content": text}
+            ]
+        )
+        
+        # Return translation
+        return response.choices[0].message.content
+        
+    except Exception as e:
+        print(f"Error translating: {e}")
         return None 

@@ -25,8 +25,15 @@ TRANSCRIPTS_DIR = "transcripts"
 # Recording Configuration
 TRIGGER_KEY = "insert"  # Use Insert key for start/stop
 
+# Transcription Models
+TRANSCRIPTION_MODELS = {
+    "Standard Quality (Faster)": "gpt-4o-mini-transcribe",
+    "Higher Quality (Slower)": "gpt-4o-transcribe"
+}
+
 # Supported Languages
 SUPPORTED_LANGUAGES = {
+    "Telugu": "te",
     "English": "en",
     "Spanish": "es",
     "French": "fr",

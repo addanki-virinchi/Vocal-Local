@@ -1,72 +1,111 @@
 # VocalLocal
 
-A powerful speech-to-text application that uses OpenAI's Whisper API to provide accurate transcriptions in multiple languages.
+A bilingual conversation tool for real-time transcription and translation.
 
 ## Features
 
-- Real-time audio transcription
-- Support for 60+ languages
-- Multiple recording modes (fixed duration or key-triggered)
-- Save transcripts to files
-- Simple and intuitive interface
-- Web interface for deployment on Render
+- **Two-Person Bilingual Conversation Interface**
+  - Each user speaks in their native language
+  - Real-time transcription of speech
+  - Automatic translation to the other user's language
+  - Display of both original and translated text
 
-## Requirements
+- **Language Selection**
+  - Manual selection of spoken language for each participant
+  - Support for 30+ languages
+
+- **Text-to-Speech Functionality**
+  - Optional TTS for translated messages
+  - Toggle on/off for each participant
+
+- **Browser & Device Compatibility**
+  - Support for modern browsers (Chrome, Firefox, Safari)
+  - Mobile device support including iOS
+  - Proper handling of microphone permissions
+
+- **Advanced Transcription & Translation**
+  - High-quality transcription using OpenAI models
+  - Neural machine translation
+
+## Running the Application
+
+### Prerequisites
 
 - Python 3.8+
 - OpenAI API key
-- PyAudio
-- Other dependencies listed in requirements.txt
 
-## Installation
+### Installation
 
 1. Clone the repository:
-```bash
-git clone https://github.com/radubobirnac/vocallocal.git
-cd vocallocal
-```
+   ```
+   git clone https://github.com/yourusername/vocallocal.git
+   cd vocallocal
+   ```
 
-2. Create and activate a virtual environment (recommended):
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
+2. Create a virtual environment:
+   ```
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
 
 3. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
+   ```
+   pip install -r requirements.txt
+   ```
 
-4. Set up your environment:
-```bash
-cp .env.example .env
-```
-Then edit `.env` and add your OpenAI API key.
+4. Create a `.env` file with your OpenAI API key:
+   ```
+   OPENAI_API_KEY=your_api_key_here
+   SECRET_KEY=some_random_secret_string
+   ```
 
-## Usage
+5. Run the application:
+   ```
+   python app.py
+   ```
 
-### Desktop Applications
+6. Open a web browser and go to:
+   ```
+   https://localhost:5000
+   ```
+   (Note: You'll need to accept the self-signed certificate warning)
 
-The project includes several versions of the application:
+## Using the Application
 
-- `modsimple.py`: Simple modular version with language selection
-- `realtimevocal.py`: Real-time transcription version
-- `GUI.py`: Graphical user interface version
-- `modular_vocal.py`: Core modular implementation
+1. **Select Languages**
+   - Each participant selects their language from the dropdown menu
 
-To run the simple modular version:
-```bash
-python modsimple.py
-```
+2. **Start Conversation**
+   - Click the microphone button to start recording
+   - Speak clearly into your microphone
+   - Click again to stop recording
 
-### Web Application
+3. **View Transcriptions and Translations**
+   - Your original speech appears in the top box
+   - The translation of your partner's speech appears in the bottom box
 
-The project also includes a web interface that can be deployed to Render or run locally:
+4. **Text-to-Speech**
+   - Toggle the "Read translations aloud" option to have translations read to you
 
-To run the web application locally:
-```bash
-flask run
-```
+## Technical Implementation
+
+- **Backend**: Flask web server with OpenAI API integration
+- **Frontend**: HTML/CSS/JavaScript with Bootstrap for styling
+- **Audio Processing**: Browser's MediaRecorder API
+- **Speech Recognition**: OpenAI GPT-4o Transcribe models
+- **Translation**: OpenAI GPT-4o for neural machine translation
+- **Text-to-Speech**: Browser's SpeechSynthesis API
+
+## Browser Compatibility
+
+| Browser | Support | Notes |
+|---------|---------|-------|
+| Chrome  | Full    | Best performance |
+| Firefox | Full    | Good compatibility |
+| Safari  | Full    | Requires HTTPS for microphone access |
+| Edge    | Full    | Good compatibility |
+| iOS Safari | Full | Some audio recording limitations |
+| Android Chrome | Full | Good compatibility |
 
 ## Deployment to Render
 
@@ -95,20 +134,29 @@ flask run
    - Click "Create Web Service"
    - Render will automatically build and deploy your application
 
-## Troubleshooting Deployment
+## Troubleshooting
 
-If you encounter issues with PyAudio installation on Render, try these steps:
+### Microphone Access Issues
 
-1. **Use the build.sh script** - This script installs the necessary system dependencies for PyAudio.
+If you're experiencing microphone access problems:
 
-2. **Alternative: Use render.yaml** - This configuration file can also be used to set up your deployment.
+1. **Browser permissions** - When first using the app, your browser will ask for microphone access. Make sure to click "Allow". If you accidentally denied permission:
+   - **Chrome**: Click the lock/info icon in the address bar, then change the microphone setting to "Allow"
+   - **Firefox**: Click the lock icon, go to "Permissions" and enable microphone access
+   - **Safari**: Go to Safari Preferences > Websites > Microphone and allow access for the site
 
-3. **Check Render logs** - If your deployment fails, check the logs for specific errors.
+2. **HTTPS requirement** - Browsers require HTTPS for microphone access. When running locally:
+   - With SSL: `flask run --cert=adhoc` (requires pyopenssl)
+   - Without SSL: Use localhost (http://127.0.0.1:5000) which browsers treat as secure
+   - Alternative: Use a secure tunnel like ngrok: `ngrok http 5000`
 
-## Contributing
+3. **Device permissions** - Ensure your computer's system settings allow browser access to the microphone:
+   - **Windows**: Settings > Privacy > Microphone
+   - **macOS**: System Preferences > Security & Privacy > Privacy > Microphone
+   - **Linux**: Varies by distribution, check your sound settings
 
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+4. **Try a different browser** - If one browser doesn't work, try Chrome, Firefox, or Edge
 
 ## License
 
-[MIT](https://choosealicense.com/licenses/mit/) 
+[MIT](https://choosealicense.com/licenses/mit/)
